@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>    Sound synthesis with Flocking
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/theme/css/cid.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+            <div class="container">
+
+<header class="blog-header">
+    <h1><a href="/">Alex Huang's Homepage</a></h1>
+    <p></p>
+    <nav>
+        <a href="/">INDEX</a>
+        <a href="/archives.html">ARCHIVES</a>
+        <a href="/categories.html">CATEGORIES</a>
+    </nav>
+</header>
+
+    <div class="post">
+
+        <header>
+            <h1>Sound synthesis with Flocking</h1>
+            <p class="date">Written on <time datetime="2015-08-15T15:11:53.516583-05:00">Aug 15, 2015</time></p>
+        </header>
+
+        <article>
+            <p>As I was revisiting the <a href="http://d-m-adventure.neocities.org/canvasgame.html">bullet hell game</a> I made as part of my Christmas gift to my friends last year, I realized that it was a bit strange that some of the other pages on my site had music and that I'd even added an entire music section later but the game had no audio at all. To fix this, I searched for JavaScript sound synthesis libraries and came upon <a href="http://flockingjs.org">Flocking</a>. Their front page caught my attention with this: "In Flocking, unit generators and synths are specified declaratively as JSON, making it easy to save, share, and manipulate your synthesis algorithms."</p>
+<p>Indeed, I found it much more intuitive to customize sounds in Flocking compared to other audio libraries I've used before. Instead of awkwardly using a chain of object methods to patch different components together before patching to the output, you can make a self-contained JavaScript object that defines a synthesizer with all of the unit generators it depends on:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">explodeSynthObj</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">synthDef</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">ugen</span><span class="o">:</span> <span class="s2">&quot;flock.ugen.lfNoise&quot;</span><span class="p">,</span>
+    <span class="nx">freq</span><span class="o">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="nx">mul</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">ugen</span><span class="o">:</span> <span class="s2">&quot;flock.ugen.asr&quot;</span><span class="p">,</span>
+      <span class="nx">attack</span><span class="o">:</span> <span class="mf">0.001</span><span class="p">,</span>
+      <span class="nx">sustain</span><span class="o">:</span> <span class="mf">0.25</span><span class="p">,</span>
+      <span class="nx">release</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+      <span class="nx">gate</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">ugen</span><span class="o">:</span> <span class="s2">&quot;flock.ugen.inputChangeTrigger&quot;</span><span class="p">,</span>
+        <span class="nx">source</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">duration</span><span class="o">:</span> <span class="mi">0</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>Then you can simply pass your object as a parameter to <code>flock.synth()</code> to start and return a new instance that you can call <code>.play()</code> or <code>.pause()</code> on as needed.</p>
+<p>Additionally, the official website of Flocking has a <a href="http://flockingjs.org/demos/interactive/html/playground.html#asr">playground</a> where you can try different presets and interactively modify them, which makes it easy to figure out how different unit generators work.</p>
+<p>Currently, the sounds I've added to my game include the above explosion effect, an impulse oscillator that quickly plays random frequencies between 220 Hz (A3) and 440 Hz (A4) while fighting normal enemies, and a pulse wave oscillator that slowly plays random frequencies between 55 Hz (A1) and 77.7817 Hz (D#2) while fighting bosses.</p>
+        </article>
+
+        <footer>
+            <p>Category: <a href="/category/javascript.html">JavaScript</a></p>
+        </footer>
+
+
+    </div>
+
+
+<footer class="blog-footer">
+
+    <ul class="nav">
+                <li><a href="/pages/about.html">About</a></li>
+                <li><a href="/pages/projects.html">Projects</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/pages/contact.html">Contact</a></li>
+            <li><a href="https://github.com/ahuanguchi" target="_blank">GitHub
+            </a></li>
+    </ul>
+
+    <p class="disclaimer">
+        Built with <a href="http://getpelican.com">Pelican</a> and the <a href="https://github.com/hdra/Pelican-Cid">Cid</a> theme with modifications.
+    </p>
+</footer>
+            </div>
+    </body>
+</html>
